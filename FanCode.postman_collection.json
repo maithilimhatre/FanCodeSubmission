@@ -1,0 +1,238 @@
+{
+	"info": {
+		"_postman_id": "f138506c-be4c-4ddf-8474-3006e7e6c02b",
+		"name": "FanCode",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33282857",
+		"_collection_link": "https://www.postman.com/maithilim/workspace/fancode/collection/33282857-f138506c-be4c-4ddf-8474-3006e7e6c02b?action=share&source=collection_link&creator=33282857"
+	},
+	"item": [
+		{
+			"name": "Todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body\r",
+							"const todos = pm.response.json();\r",
+							"\r",
+							"// Get the matching users from the environment variable and parse it\r",
+							"const matchingUsers = JSON.parse(pm.environment.get(\"matchingUsers\"));\r",
+							"\r",
+							"// Initialize an object to store task counts\r",
+							"let totalTaskCounts = {};\r",
+							"let completedTaskCounts = {};\r",
+							"\r",
+							"// Initialize the task counts for each matching user\r",
+							"matchingUsers.forEach(user => {\r",
+							"    totalTaskCounts[user.id] = 0;\r",
+							"    completedTaskCounts[user.id] = 0;\r",
+							"});\r",
+							"\r",
+							"// Iterate over each task and count the total and completed tasks for matching users\r",
+							"todos.forEach(task => {\r",
+							"    if (totalTaskCounts.hasOwnProperty(task.userId)) {\r",
+							"        totalTaskCounts[task.userId]++;\r",
+							"        if (task.completed) {\r",
+							"            completedTaskCounts[task.userId]++;\r",
+							"        }\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// Calculate and print the percentage of completed tasks\r",
+							"matchingUsers.forEach(user => {\r",
+							"    const totalTasks = totalTaskCounts[user.id];\r",
+							"    const completedTasks = completedTaskCounts[user.id];\r",
+							"    const percentageCompleted = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;\r",
+							"    \r",
+							"    console.log(`User ID: ${user.id}, Name: ${user.name}, Completed Tasks: ${completedTasks}, Total Tasks: ${totalTasks}, Percentage Completed: ${percentageCompleted.toFixed(2)}%`);\r",
+							"});\r",
+							"\r",
+							"// Set a test result to display in the Postman Test Results\r",
+							"pm.test(\"Completed tasks percentage for matching users\", function() {\r",
+							"    matchingUsers.forEach(user => {\r",
+							"        const totalTasks = totalTaskCounts[user.id];\r",
+							"        const completedTasks = completedTaskCounts[user.id];\r",
+							"        const percentageCompleted = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;\r",
+							"        \r",
+							"        pm.expect(percentageCompleted).to.be.within(0, 100);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/todos",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Posts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/comments",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Albums",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/albums",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Photos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/photos",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"photos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body\r",
+							"const usersjson = pm.response.json();\r",
+							"\r",
+							"// Initialize an empty array to store users that meet the criteria\r",
+							"let matchingUsers = [];\r",
+							"\r",
+							"// Iterate over each user and check the coordinates\r",
+							"usersjson.forEach(user => {\r",
+							"    const lat = parseFloat(user.address.geo.lat);\r",
+							"    const lng = parseFloat(user.address.geo.lng);\r",
+							"\r",
+							"    if (lat >= -40 && lat <= 5 && lng >= 5 && lng <= 100) {\r",
+							"        matchingUsers.push(user);\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// Print the matching users to the console\r",
+							"console.log(\"Users with lat between -40 and 5 and lng between 5 and 100:\", matchingUsers);\r",
+							"\r",
+							"// Test result to display in the Postman Test Results\r",
+							"pm.test(\"Number of matching users\", function () {\r",
+							"    pm.expect(matchingUsers.length).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"// Set the matching users as an environment variable for further use\r",
+							"pm.environment.set(\"matchingUsers\", JSON.stringify(matchingUsers));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/users",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
